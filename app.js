@@ -1,27 +1,30 @@
-var app = angular.module('newslist', []);
+var app = angular.module('newslist', ['ui-router']);
+
+app.factory('posts', [function(){
+  var o = {
+    posts: []
+  };
+  return o;
+}]);
 
 app.controller('MainCtrl', [
   '$scope',
-  function($scope){
-    $scope.test = 'Hi!';
+  'posts',
+  function($scope, posts){
 
-    $scope.posts = [
-      { title: 'post1', upvotes: 5 },
-      { title: 'post2', upvotes: 6 },
-      { title: 'post3', upvotes: 8 },
-      { title: 'post4', upvotes: 1 },
-      { title: 'post5', upvotes: 2 }
-    ];
+    $scope.posts = posts.posts;
 
     $scope.addPost = function(){
       if (!$scope.title || $scope.title === '') { return; }
       $scope.posts.push({
         title: $scope.title,
         link: $scope.link,
-        upvotes: 0
+        upvotes: 0,
+        comments: [
+          {author: 'Joe', body: 'Cool post!', upvotes: 0},
+          {author: 'Bob', body: 'Great idea but everything is wrong!', upvotes: 0}
+        ]
       });
-      $scope.title = '';
-      $scope.link = '';
     };
 
     $scope.incrementUpvotes = function(post){
@@ -29,3 +32,31 @@ app.controller('MainCtrl', [
     };
   }
 ]);
+
+app.controller('PostsCtrl', [
+'$scope',
+'$stateParams',
+'posts',
+function($scope, $stateParams, posts){
+
+}]);
+
+app.config([
+'$stateProvider',
+'$urlRouterProvider',
+function($stateProvider, $urlRouterProvider) {
+
+  $stateProvider
+    .state('home', {
+      url: '/home',
+      templateUrl: '/home.html',
+      controller: 'MainCtrl'
+    })
+    .state('posts', {
+      url: '/posts/{id}',
+      templateUrl: '/posts.html',
+      controller: 'PostsCtrl'
+    });
+
+  $urlRouterProvider.otherwise('home');
+}]);
