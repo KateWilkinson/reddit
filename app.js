@@ -4,12 +4,18 @@ app.controller('MainCtrl', [
   '$scope',
   function($scope){
     $scope.test = 'Hi!';
+
     $scope.posts = [
-      'post1',
-      'post2',
-      'post3',
-      'post4',
-      'post5'
+      { title: 'post1', upvotes: 5 },
+      { title: 'post2', upvotes: 6 },
+      { title: 'post3', upvotes: 8 },
+      { title: 'post4', upvotes: 1 },
+      { title: 'post5', upvotes: 2 }
     ];
+
+    $scope.addPost = function(){
+      $scope.posts.push({ title: $scope.title, upvotes: 0 });
+      $scope.title = '';
+    };
   }
 ]);
